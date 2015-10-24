@@ -8,7 +8,7 @@ Doge bot for Slack
 4. If you're running it from your project, you can require and run it with:
 
 ```javascript
-require('dogebot')(mySuperSecretSlackToken);
+require('dogebot')('mySuperSecretSlackToken');
 ```
 
 ## Usage
