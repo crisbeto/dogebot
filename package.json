@@ -1,0 +1,21 @@
+{
+    "name": "dogebot",
+    "version": "0.1.0",
+    "description": "Doge bot for Slack",
+    "main": "dogebot.js",
+    "keywords": [
+        "wow",
+        "doge",
+        "slack",
+        "bot"
+    ],
+    "author": "crisbeto",
+    "license": "MIT",
+    "dependencies": {
+        "dogefy": "^0.1.0",
+        "slack-client": "^1.4.1"
+    },
+    "bin": {
+        "dogebot": "cli"
+    }
+}
