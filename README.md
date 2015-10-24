@@ -15,4 +15,4 @@ require('dogebot')(mySuperSecretSlackToken);
 You can message the bot directly or you can @mention it on a channel that it is on. You can invite the bot to as many channels as you want.
 
 ## Result
-pending...
+![dogebot in action](https://raw.githubusercontent.com/crisbeto/dogebot/master/result.gif)
