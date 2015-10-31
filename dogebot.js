@@ -6,10 +6,7 @@ var getTag = function(id){
 };
 
 var isDirect = function(userId, messageText){
-    var userTag = getTag(userId);
-    return messageText &&
-           messageText.length >= userTag.length &&
-           messageText.substr(0, userTag.length) === userTag;
+    return messageText && messageText.indexOf(userId) > -1;
 };
 
 module.exports = function(key){
