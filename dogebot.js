@@ -1,4 +1,6 @@
-var Slack = require('slack-client');
+var RtmClient = require('@slack/client').RtmClient;
+var RTM_EVENTS = require('@slack/client').RTM_EVENTS;
+var CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 var doge = require('dogefy');
 
 var getTag = function(id){
@@ -10,37 +12,28 @@ var isDirect = function(userId, messageText){
 };
 
 module.exports = function(key){
-    if(key){
-        var slack = new Slack(key, true, true);
+    if(!key) throw new Error('You need to specify a Slack token');
 
-        slack.on('open', function(){
-            var channels = Object.keys(slack.channels)
-                .map(function (k) { return slack.channels[k]; })
-                .filter(function (c) { return c.is_member; })
-                .map(function (c) { return c.name; });
+    var rtm = new RtmClient(key);
 
-            console.log("Connected to " + slack.team.name + " as @" + slack.self.name);
-            console.log("Joined channels: " + channels.join(', '));
-        });
+    rtm.on(CLIENT_EVENTS.RTM.RTM_CONNECTION_OPENED, function() {
+        var team = rtm.dataStore.getTeamById(rtm.activeTeamId);
+        var user = rtm.dataStore.getUserById(rtm.activeUserId);
+        console.log('Connected to ' + team.name + ' as ' + user.name);
+    });
 
-        slack.on('message', function(message) {
-            var channel = slack.getChannelGroupOrDMByID(message.channel);
+    rtm.on(RTM_EVENTS.MESSAGE, function(message){
+        var channel = rtm.dataStore.getChannelGroupOrDMById(message.channel);
 
-            if(message.type === 'message' && isDirect(slack.self.id, message.text) || channel.is_im){
-                var cleanedMessage = message.text && message.text.replace(getTag(slack.self.id), '').replace(':', '').trim();
+        if(message.type === 'message' && message.text && (channel.is_im || isDirect(rtm.activeUserId, message.text))){
+            var cleanedMessage = message.text.replace(getTag(rtm.activeUserId), '').replace(':', '').substring(0, 2000).trim();
 
-                if(cleanedMessage){
-                    channel.send('``` \n' + doge(cleanedMessage) + '\n ```');
-                }
+            if(cleanedMessage){
+                console.log('Dogefied: ' + cleanedMessage);
+                rtm.sendMessage('``` \n' + doge(cleanedMessage) + '\n ```', message.channel);
             }
-        });
+        }
+    });
 
-        slack.on('error', function(err){
-            return console.error("Error", err);
-        });
-
-        slack.login();
-    }else{
-        throw "You need to specify a Slack token";
-    }
+    rtm.start();
 };
