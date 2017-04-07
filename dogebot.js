@@ -3,14 +3,6 @@ var RTM_EVENTS = require('@slack/client').RTM_EVENTS;
 var CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 var doge = require('dogefy');
 
-var getTag = function(id){
-  return '<@' + id + '>';
-};
-
-var isDirect = function(userId, messageText){
-  return messageText && messageText.indexOf(userId) > -1;
-};
-
 module.exports = function(key){
   if(!key) throw new Error('You need to specify a Slack token');
 
@@ -36,4 +28,12 @@ module.exports = function(key){
   });
 
   rtm.start();
+};
+
+function getTag(id){
+  return '<@' + id + '>';
+};
+
+function isDirect(userId, messageText){
+  return messageText && messageText.indexOf(userId) > -1;
 };
