@@ -17,8 +17,14 @@ module.exports = function(key){
   rtm.on(RTM_EVENTS.MESSAGE, function(message){
     var channel = rtm.dataStore.getChannelGroupOrDMById(message.channel);
 
-    if(message.type === 'message' && message.text && (channel.is_im || isDirect(rtm.activeUserId, message.text))){
-      var cleanedMessage = message.text.replace(getTag(rtm.activeUserId), '').replace(':', '').substring(0, 2000).trim();
+    if(message.type === 'message' && message.text &&
+      (channel.is_im || isDirect(rtm.activeUserId, message.text))
+    ){
+      var cleanedMessage = message.text
+        .replace(getTag(rtm.activeUserId), '')
+        .replace(':', '')
+        .substring(0, 2000)
+        .trim();
 
       if(cleanedMessage){
         console.log('Dogefied: ' + cleanedMessage);
