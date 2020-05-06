@@ -3,7 +3,7 @@ var RTM_EVENTS = require('@slack/client').RTM_EVENTS;
 var CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
 var doge = require('dogefy');
 
-module.exports = function(key){
+module.exports = function(key) {
   if(!key) throw new Error('You need to specify a Slack token');
 
   var rtm = new RtmClient(key);
@@ -14,7 +14,7 @@ module.exports = function(key){
     console.log('Connected to ' + team.name + ' as ' + user.name);
   });
 
-  rtm.on(RTM_EVENTS.MESSAGE, function(message){
+  rtm.on(RTM_EVENTS.MESSAGE, function(message) {
     var channel = rtm.dataStore.getChannelGroupOrDMById(message.channel);
 
     if(message.type === 'message' && message.text &&
@@ -36,10 +36,10 @@ module.exports = function(key){
   rtm.start();
 };
 
-function getTag(id){
+function getTag(id) {
   return '<@' + id + '>';
 };
 
-function isDirect(userId, messageText){
+function isDirect(userId, messageText) {
   return messageText && messageText.indexOf(userId) > -1;
 };
